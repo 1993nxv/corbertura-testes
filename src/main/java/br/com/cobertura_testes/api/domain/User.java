@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "TB_USER")
 public class User {
 
     @Id
@@ -18,7 +19,6 @@ public class User {
 
     @Column(unique = true)
     private String email;
-
     private String password;
 
 }
