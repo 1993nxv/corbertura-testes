@@ -3,10 +3,13 @@ package br.com.cobertura_testes.api.domain;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Table(name = "TB_USER")
 public class User {
 
     @Id
