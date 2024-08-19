@@ -33,7 +33,7 @@ public class UserContoller {
     public ResponseEntity<List<UserDTO>> findAll(){
         List<UserDTO> usersDTO = userService.findAll()
                 .stream()
-                .map(x -> mapper.map(x, UserDTO.class))
+                .map(user -> mapper.map(user, UserDTO.class))
                 .collect(Collectors.toList()
         );
         return ResponseEntity.ok().body(usersDTO);
