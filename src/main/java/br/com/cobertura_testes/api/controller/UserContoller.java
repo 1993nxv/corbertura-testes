@@ -1,6 +1,6 @@
 package br.com.cobertura_testes.api.controller;
 
-import br.com.cobertura_testes.api.domain.User;
+import br.com.cobertura_testes.api.domain.dto.UserDTO;
 import br.com.cobertura_testes.api.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +21,9 @@ public class UserContoller {
     private ModelMapper mapper;
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id){
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id){
         return ResponseEntity.ok()
-                .body(userService.findById(id));
+                .body(mapper.map(userService.findById(id), UserDTO.class));
     }
 
 }
