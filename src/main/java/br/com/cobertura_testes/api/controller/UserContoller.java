@@ -1,14 +1,13 @@
 package br.com.cobertura_testes.api.controller;
 
+import br.com.cobertura_testes.api.domain.User;
 import br.com.cobertura_testes.api.domain.dto.UserDTO;
 import br.com.cobertura_testes.api.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,5 +36,12 @@ public class UserContoller {
                 .collect(Collectors.toList()
         );
         return ResponseEntity.ok().body(usersDTO);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public UserDTO save(@RequestBody UserDTO userDTO){
+        User user = mapper.map(userDTO, User.class);
+        return mapper.map(userService.save(user), UserDTO.class);
     }
 }
