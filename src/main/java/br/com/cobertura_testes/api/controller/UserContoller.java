@@ -53,4 +53,10 @@ public class UserContoller {
         userService.update(user);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id){
+        userService.deleteById(id);
+    }
+
 }
