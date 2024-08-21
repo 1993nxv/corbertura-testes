@@ -1,5 +1,6 @@
 package br.com.cobertura_testes.api.controller.exception;
 
+import br.com.cobertura_testes.api.service.exception.EmailEmUsoException;
 import br.com.cobertura_testes.api.service.exception.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -24,4 +25,18 @@ public class ResourceExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+
+    @ExceptionHandler(EmailEmUsoException.class)
+    public ResponseEntity<StandardError> emailEmUsoException(EmailEmUsoException ex, HttpServletRequest request){
+
+        StandardError error = new StandardError(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
 }
