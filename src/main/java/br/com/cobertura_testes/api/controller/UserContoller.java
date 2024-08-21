@@ -44,4 +44,13 @@ public class UserContoller {
         User user = mapper.map(userDTO, User.class);
         return mapper.map(userService.save(user), UserDTO.class);
     }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{id}")
+    public void update(@PathVariable Long id, @RequestBody UserDTO userDTO){
+        userDTO.setId(id);
+        User user = mapper.map(userDTO, User.class);
+        userService.update(user);
+    }
+
 }
