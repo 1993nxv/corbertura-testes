@@ -3,6 +3,7 @@ package br.com.cobertura_testes.api.service.impl;
 import br.com.cobertura_testes.api.domain.User;
 import br.com.cobertura_testes.api.domain.dto.UserDTO;
 import br.com.cobertura_testes.api.repository.UserRepository;
+import br.com.cobertura_testes.api.service.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,6 +52,18 @@ class UserServiceImplTest {
         Assertions.assertEquals(ID, response.getId());
         Assertions.assertEquals(NOME, response.getNome());
         Assertions.assertEquals(EMAIL, response.getEmail());
+    }
+
+    @Test
+    void whenFindByIdThenReturnAnObjectNotFoundException() {
+        Mockito.when(userRepository.findById(Mockito.anyLong()))
+                .thenThrow(new ObjectNotFoundException("Usuário não encontrado"));
+        try {
+            userService.findById(ID);
+        }catch (Exception exception) {
+            Assertions.assertEquals(ObjectNotFoundException.class, exception.getClass());
+            Assertions.assertEquals("Usuário não encontrado", exception.getMessage());
+        }
     }
 
     @Test
