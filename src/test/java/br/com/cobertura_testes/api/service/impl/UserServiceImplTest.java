@@ -25,6 +25,8 @@ class  UserServiceImplTest {
     public static final String NOME     = "Delmondes";
     public static final String EMAIL    = "del@mail.com";
     public static final String PASSWORD = "123";
+    public static final int INDEX       = 0;
+    public static final String USUARIO_NAO_ENCONTRADO_MSG = "Usuário não encontrado";
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -61,12 +63,12 @@ class  UserServiceImplTest {
     @DisplayName("whenFindByIdThenReturnAnObjectNotFoundException")
     void exceptionFindById() {
         Mockito.when(userRepository.findById(Mockito.anyLong()))
-                .thenThrow(new ObjectNotFoundException("Usuário não encontrado"));
+                .thenThrow(new ObjectNotFoundException(USUARIO_NAO_ENCONTRADO_MSG));
         try {
             userService.findById(ID);
         }catch (Exception exception) {
             Assertions.assertEquals(ObjectNotFoundException.class, exception.getClass());
-            Assertions.assertEquals("Usuário não encontrado", exception.getMessage());
+            Assertions.assertEquals(USUARIO_NAO_ENCONTRADO_MSG, exception.getMessage());
         }
     }
 
@@ -77,7 +79,11 @@ class  UserServiceImplTest {
         List<User> response = userService.findAll();
         Assertions.assertNotNull(response);
         Assertions.assertEquals(1, response.size());
-        Assertions.assertEquals(User.class, response.get(0).getClass());
+        Assertions.assertEquals(User.class, response.get(INDEX).getClass());
+
+        Assertions.assertEquals(ID, response.get(INDEX).getId());
+        Assertions.assertEquals(NOME, response.get(INDEX).getNome());
+        Assertions.assertEquals(EMAIL, response.get(INDEX).getEmail());
     }
 
     @Test
