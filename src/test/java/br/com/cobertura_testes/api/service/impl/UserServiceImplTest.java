@@ -6,6 +6,7 @@ import br.com.cobertura_testes.api.repository.UserRepository;
 import br.com.cobertura_testes.api.service.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -14,10 +15,11 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
-class UserServiceImplTest {
+class  UserServiceImplTest {
 
     public static final long ID         = 1L;
     public static final String NOME     = "Delmondes";
@@ -42,7 +44,8 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenFindByIdThenReturnAnUserInstance() {
+    @DisplayName("whenFindByIdThenReturnAnUserInstance")
+    void findById() {
         Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(optionalUser);
 
         User response = userService.findById(ID);
@@ -55,7 +58,8 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenFindByIdThenReturnAnObjectNotFoundException() {
+    @DisplayName("whenFindByIdThenReturnAnObjectNotFoundException")
+    void exceptionFindById() {
         Mockito.when(userRepository.findById(Mockito.anyLong()))
                 .thenThrow(new ObjectNotFoundException("Usuário não encontrado"));
         try {
@@ -67,7 +71,13 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("whenFindAllThenReturnAnListOfUser")
     void findAll() {
+        Mockito.when(userRepository.findAll()).thenReturn(List.of(user));
+        List<User> response = userService.findAll();
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(1, response.size());
+        Assertions.assertEquals(User.class, response.get(0).getClass());
     }
 
     @Test
