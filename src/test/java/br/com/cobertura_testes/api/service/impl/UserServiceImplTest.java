@@ -103,7 +103,7 @@ class  UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("whenCreateThenReturnAnDataIntegrityViolation")
+    @DisplayName("whenCreateThenReturnAnEmailEmUsoException")
     void exceptionSave() {
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
         try{
@@ -129,6 +129,33 @@ class  UserServiceImplTest {
         Assertions.assertEquals(NOME, response.getNome());
         Assertions.assertEquals(EMAIL, response.getEmail());
         Assertions.assertEquals(PASSWORD, response.getPassword());
+    }
+
+    @Test
+    @DisplayName("whenUpdateThenReturnAnObjectNotFoundException")
+    void exceptionUpdate() {
+        Mockito.when(userRepository.save(Mockito.any())).thenReturn(optionalUser);
+        try{
+            optionalUser.get().setId(5L);
+            userService.update(user);
+        }catch (Exception exception) {
+            Assertions.assertEquals(ObjectNotFoundException.class, exception.getClass());
+            Assertions.assertEquals(USUARIO_NAO_ENCONTRADO_MSG, exception.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("whenUpdateThenReturnAnEmailEmUsoExption")
+    void exceptionUpdateEmail() {
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(optionalUser);
+        try{
+            optionalUser.get().setId(2L);
+            userService.update(user);
+        }catch (Exception exception) {
+            Assertions.assertEquals(EmailEmUsoException.class, exception.getClass());
+            Assertions.assertEquals("E-mail já cadastrado", exception.getMessage());
+        }
     }
 
     @Test
