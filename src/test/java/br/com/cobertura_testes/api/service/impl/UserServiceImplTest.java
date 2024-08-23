@@ -116,7 +116,19 @@ class  UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("whenUpdateThenReturnSuccess")
     void update() {
+        Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(optionalUser);
+
+        User response = userService.update(user);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(User.class, response.getClass());
+        Assertions.assertEquals(ID, response.getId());
+        Assertions.assertEquals(NOME, response.getNome());
+        Assertions.assertEquals(EMAIL, response.getEmail());
+        Assertions.assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
@@ -132,4 +144,5 @@ class  UserServiceImplTest {
         this.userDTO = new UserDTO(ID, NOME, EMAIL, PASSWORD);
         this.optionalUser = Optional.of(new User(ID, NOME, EMAIL, PASSWORD));
     }
+
 }
