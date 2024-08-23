@@ -3,6 +3,7 @@ package br.com.cobertura_testes.api.service.impl;
 import br.com.cobertura_testes.api.domain.User;
 import br.com.cobertura_testes.api.domain.dto.UserDTO;
 import br.com.cobertura_testes.api.repository.UserRepository;
+import br.com.cobertura_testes.api.service.exception.EmailEmUsoException;
 import br.com.cobertura_testes.api.service.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -99,6 +100,19 @@ class  UserServiceImplTest {
         Assertions.assertEquals(NOME, response.getNome());
         Assertions.assertEquals(EMAIL, response.getEmail());
         Assertions.assertEquals(PASSWORD, response.getPassword());
+    }
+
+    @Test
+    @DisplayName("whenCreateThenReturnAnDataIntegrityViolation")
+    void exceptionSave() {
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
+        try{
+            optionalUser.get().setId(2L);
+            userService.save(user);
+        }catch (Exception exception) {
+            Assertions.assertEquals(EmailEmUsoException.class, exception.getClass());
+            Assertions.assertEquals("E-mail já cadastrado", exception.getMessage());
+        }
     }
 
     @Test
