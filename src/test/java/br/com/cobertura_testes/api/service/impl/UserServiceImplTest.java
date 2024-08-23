@@ -3,6 +3,7 @@ package br.com.cobertura_testes.api.service.impl;
 import br.com.cobertura_testes.api.domain.User;
 import br.com.cobertura_testes.api.domain.dto.UserDTO;
 import br.com.cobertura_testes.api.repository.UserRepository;
+import br.com.cobertura_testes.api.service.exception.EmailEmUsoException;
 import br.com.cobertura_testes.api.service.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -87,11 +88,74 @@ class  UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("whenCreateThenReturnSuccess")
     void save() {
+        Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
+
+        User response = userService.save(user);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(User.class, response.getClass());
+        Assertions.assertEquals(ID, response.getId());
+        Assertions.assertEquals(NOME, response.getNome());
+        Assertions.assertEquals(EMAIL, response.getEmail());
+        Assertions.assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
+    @DisplayName("whenCreateThenReturnAnEmailEmUsoException")
+    void exceptionSave() {
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
+        try{
+            optionalUser.get().setId(2L);
+            userService.save(user);
+        }catch (Exception exception) {
+            Assertions.assertEquals(EmailEmUsoException.class, exception.getClass());
+            Assertions.assertEquals("E-mail já cadastrado", exception.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("whenUpdateThenReturnSuccess")
     void update() {
+        Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(optionalUser);
+
+        User response = userService.update(user);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(User.class, response.getClass());
+        Assertions.assertEquals(ID, response.getId());
+        Assertions.assertEquals(NOME, response.getNome());
+        Assertions.assertEquals(EMAIL, response.getEmail());
+        Assertions.assertEquals(PASSWORD, response.getPassword());
+    }
+
+    @Test
+    @DisplayName("whenUpdateThenReturnAnObjectNotFoundException")
+    void exceptionUpdate() {
+        Mockito.when(userRepository.save(Mockito.any())).thenReturn(optionalUser);
+        try{
+            optionalUser.get().setId(5L);
+            userService.update(user);
+        }catch (Exception exception) {
+            Assertions.assertEquals(ObjectNotFoundException.class, exception.getClass());
+            Assertions.assertEquals(USUARIO_NAO_ENCONTRADO_MSG, exception.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("whenUpdateThenReturnAnEmailEmUsoExption")
+    void exceptionUpdateEmail() {
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(optionalUser);
+        try{
+            optionalUser.get().setId(2L);
+            userService.update(user);
+        }catch (Exception exception) {
+            Assertions.assertEquals(EmailEmUsoException.class, exception.getClass());
+            Assertions.assertEquals("E-mail já cadastrado", exception.getMessage());
+        }
     }
 
     @Test
@@ -107,4 +171,5 @@ class  UserServiceImplTest {
         this.userDTO = new UserDTO(ID, NOME, EMAIL, PASSWORD);
         this.optionalUser = Optional.of(new User(ID, NOME, EMAIL, PASSWORD));
     }
+
 }
