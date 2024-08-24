@@ -28,6 +28,7 @@ class  UserServiceImplTest {
     public static final String PASSWORD = "123";
     public static final int INDEX       = 0;
     public static final String USUARIO_NAO_ENCONTRADO_MSG = "Usuário não encontrado";
+    public static final String E_MAIL_JA_CADASTRADO = "E-mail já cadastrado";
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -111,7 +112,7 @@ class  UserServiceImplTest {
             userService.save(user);
         }catch (Exception exception) {
             Assertions.assertEquals(EmailEmUsoException.class, exception.getClass());
-            Assertions.assertEquals("E-mail já cadastrado", exception.getMessage());
+            Assertions.assertEquals(E_MAIL_JA_CADASTRADO, exception.getMessage());
         }
     }
 
@@ -154,7 +155,7 @@ class  UserServiceImplTest {
             userService.update(user);
         }catch (Exception exception) {
             Assertions.assertEquals(EmailEmUsoException.class, exception.getClass());
-            Assertions.assertEquals("E-mail já cadastrado", exception.getMessage());
+            Assertions.assertEquals(E_MAIL_JA_CADASTRADO, exception.getMessage());
         }
     }
 
