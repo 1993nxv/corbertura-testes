@@ -11,7 +11,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -52,6 +56,7 @@ class UserContollerTest {
 
         ResponseEntity<UserDTO> response = userContoller.findById(ID);
 
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response);
         assertNotNull(response.getBody());
         assertEquals(ResponseEntity.class, response.getClass());
@@ -64,7 +69,24 @@ class UserContollerTest {
     }
 
     @Test
+    @DisplayName("whenFindAllThenReturnAnListOfUserDTO")
     void findAll() {
+        when(userService.findAll()).thenReturn(List.of(user));
+        when(modelMapper.map(any(), any())).thenReturn(userDTO);
+
+        ResponseEntity<List<UserDTO>> response = userContoller.findAll();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(ArrayList.class, response.getBody().getClass());
+        assertEquals(UserDTO.class, response.getBody().get(INDEX).getClass());
+
+        assertEquals(ID, response.getBody().get(INDEX).getId());
+        assertEquals(NOME, response.getBody().get(INDEX).getNome());
+        assertEquals(EMAIL, response.getBody().get(INDEX).getEmail());
+        assertEquals(PASSWORD, response.getBody().get(INDEX).getPassword());
     }
 
     @Test
