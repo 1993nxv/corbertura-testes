@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,11 +42,17 @@ public class UserContoller {
         return ResponseEntity.ok().body(usersDTO);
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public UserDTO save(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> save(@RequestBody UserDTO userDTO){
         User user = mapper.map(userDTO, User.class);
-        return mapper.map(userService.save(user), UserDTO.class);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path(ID)
+                .buildAndExpand(userService.save(user).getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).build();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

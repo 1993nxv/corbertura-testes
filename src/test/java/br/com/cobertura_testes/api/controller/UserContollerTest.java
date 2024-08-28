@@ -90,7 +90,14 @@ class UserContollerTest {
     }
 
     @Test
+    @DisplayName("whenSaveThenReturnCreated")
     void save() {
+        when(userService.save(any())).thenReturn(user);
+
+        ResponseEntity<UserDTO> response = userContoller.save(userDTO);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
     @Test
