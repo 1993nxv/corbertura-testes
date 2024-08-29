@@ -18,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 class ResourceExceptionHandlerTest {
 
+    public static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado";
+    public static final String E_MAIL_JA_CADASTRADO = "E-mail já cadastrado";
     @InjectMocks
     private ResourceExceptionHandler exceptionHandler;
 
@@ -30,7 +32,7 @@ class ResourceExceptionHandlerTest {
     @DisplayName("whenObjctNotFoundExceptionThenReturnResponseEntity")
     void objectNotFound() {
         ResponseEntity<StandardError> response = exceptionHandler.objectNotFound(
-                new ObjectNotFoundException("Objeto não encontrado"),
+                new ObjectNotFoundException(OBJETO_NAO_ENCONTRADO),
                 new MockHttpServletRequest()
         );
 
@@ -38,7 +40,7 @@ class ResourceExceptionHandlerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals(ResponseEntity.class, response.getClass());
         assertEquals(StandardError.class, response.getBody().getClass());
-        assertEquals("Objeto não encontrado", response.getBody().getError());
+        assertEquals(OBJETO_NAO_ENCONTRADO, response.getBody().getError());
         assertEquals(404, response.getBody().getStatus());
     }
 
@@ -46,7 +48,7 @@ class ResourceExceptionHandlerTest {
     @DisplayName("whenEmailEmUsoExceptionThenReturnResponseEntity")
     void emailEmUsoException() {
         ResponseEntity<StandardError> response = exceptionHandler.emailEmUsoException(
-                new EmailEmUsoException("E-mail já cadastrado"),
+                new EmailEmUsoException(E_MAIL_JA_CADASTRADO),
                 new MockHttpServletRequest()
         );
 
@@ -54,7 +56,7 @@ class ResourceExceptionHandlerTest {
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals(ResponseEntity.class, response.getClass());
         assertEquals(StandardError.class, response.getBody().getClass());
-        assertEquals("E-mail já cadastrado", response.getBody().getError());
+        assertEquals(E_MAIL_JA_CADASTRADO, response.getBody().getError());
         assertEquals(409, response.getBody().getStatus());
     }
 }
