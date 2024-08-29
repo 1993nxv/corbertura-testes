@@ -5,7 +5,6 @@ import br.com.cobertura_testes.api.domain.dto.UserDTO;
 import br.com.cobertura_testes.api.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -62,10 +61,10 @@ public class UserContoller {
         return ResponseEntity.ok().body(mapper.map(userService.update(user), UserDTO.class));
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(ID)
-    public void deleteById(@PathVariable Long id){
+    public ResponseEntity<UserDTO> deleteById(@PathVariable Long id){
         userService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
