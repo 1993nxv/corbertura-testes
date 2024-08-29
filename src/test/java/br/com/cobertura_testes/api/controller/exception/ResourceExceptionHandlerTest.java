@@ -43,6 +43,7 @@ class ResourceExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("whenEmailEmUsoExceptionThenReturnResponseEntity")
     void emailEmUsoException() {
         ResponseEntity<StandardError> response = exceptionHandler.emailEmUsoException(
                 new EmailEmUsoException("E-mail já cadastrado"),
