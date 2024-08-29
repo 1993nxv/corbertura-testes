@@ -19,8 +19,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserContollerTest {
@@ -122,7 +121,16 @@ class UserContollerTest {
     }
 
     @Test
+    @DisplayName("whenDeletByIdThenReturnSuccess")
     void deleteById() {
+        doNothing().when(userService).deleteById(anyLong());
+
+        ResponseEntity<UserDTO> response = userContoller.deleteById(ID);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(userService, times(1)).deleteById(anyLong());
+        assertNull(response.getBody());
     }
 
     private void startUsers() {
