@@ -55,12 +55,11 @@ public class UserContoller {
         return ResponseEntity.created(uri).build();
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping(ID)
-    public void update(@PathVariable Long id, @RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO userDTO){
         userDTO.setId(id);
         User user = mapper.map(userDTO, User.class);
-        userService.update(user);
+        return ResponseEntity.ok().body(mapper.map(userService.update(user), UserDTO.class));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
